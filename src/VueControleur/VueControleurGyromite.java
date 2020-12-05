@@ -21,7 +21,6 @@ import modele.plateau.*;
 /** Cette classe a deux fonctions :
  *  (1) Vue : proposer une représentation graphique de l'application (cases graphiques, etc.)
  *  (2) Controleur : écouter les évènements clavier et déclencher le traitement adapté sur le modèle (flèches direction Pacman, etc.))
- *
  */
 public class VueControleurGyromite extends JFrame implements Observer {
     private Jeu jeu; // référence sur une classe de modèle : permet d'accéder aux données du modèle pour le rafraichissement, permet de communiquer les actions clavier (ou souris)
@@ -35,6 +34,9 @@ public class VueControleurGyromite extends JFrame implements Observer {
     private ImageIcon icoMur;
     private ImageIcon icoSol;
     private ImageIcon icoColonne;
+
+    private ImageIcon icoRope;
+
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
 
@@ -70,6 +72,7 @@ public class VueControleurGyromite extends JFrame implements Observer {
         icoColonne = chargerIcone("Images/pipe-middle_64.png");
         icoMur = chargerIcone("Images/wall_64.png");
         icoSol = chargerIcone("Images/ground_64.png");
+        icoRope = chargerIcone("Images/rope_64.png");
     }
 
     private ImageIcon chargerIcone(String urlIcone) {
@@ -87,14 +90,14 @@ public class VueControleurGyromite extends JFrame implements Observer {
 
     private void placerLesComposantsGraphiques() {
         setTitle("Gyromite");
-        setSize(64*jeu.SIZE_X, 64*jeu.SIZE_Y);
+        setSize(64*jeu.SIZE_X, 64*(jeu.SIZE_Y+1));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
-        JComponent grilleJLabels = new JPanel(new GridLayout(sizeY, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
+        JComponent grilleJLabels = new JPanel(new GridLayout(sizeY+1, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
 
-        tabJLabel = new JLabel[sizeX][sizeY];
+        tabJLabel = new JLabel[sizeX][sizeY+1];
 
-        for (int y = 0; y < sizeY; y++) {
+        for (int y = 0; y < sizeY+1; y++) {
             for (int x = 0; x < sizeX; x++) {
                 JLabel jlab = new JLabel();
                 tabJLabel[x][y] = jlab; // on conserve les cases graphiques dans tabJLabel pour avoir un accès pratique à celles-ci (voir mettreAJourAffichage() )
@@ -114,15 +117,17 @@ public class VueControleurGyromite extends JFrame implements Observer {
             for (int y = 0; y < sizeY; y++) {
                 if (jeu.getGrille()[x][y] instanceof Heros) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue
                     // System.out.println("Héros !");
-                    tabJLabel[x][y].setIcon(icoHero);
+                    tabJLabel[x][y+1].setIcon(icoHero);
                 } else if (jeu.getGrille()[x][y] instanceof Sol) {
-                    tabJLabel[x][y].setIcon(icoSol);
+                    tabJLabel[x][y+1].setIcon(icoSol);
                 } else if (jeu.getGrille()[x][y] instanceof Mur) {
-                    tabJLabel[x][y].setIcon(icoMur);
+                    tabJLabel[x][y+1].setIcon(icoMur);
                 } else if (jeu.getGrille()[x][y] instanceof Colonne) {
-                    tabJLabel[x][y].setIcon(icoColonne);
+                    tabJLabel[x][y+1].setIcon(icoColonne);
+                } else if (jeu.getGrille()[x][y] instanceof Corde) {
+                    tabJLabel[x][y+1].setIcon(icoRope);
                 } else {
-                    tabJLabel[x][y].setIcon(icoVide);
+                    tabJLabel[x][y+1].setIcon(icoVide);
                 }
             }
         }

@@ -29,6 +29,7 @@ public class Jeu {
 
     private HashMap<Entite, Point> map = new  HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
+    private Entite[][] grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
 
     private Ordonnanceur ordonnanceur = new Ordonnanceur(this);
 
@@ -78,10 +79,18 @@ public class Jeu {
 
         addEntite(new Sol(this), 2, 6);
         addEntite(new Sol(this), 3, 6);
+
+        for (int i = 6; i <9; i++) {
+            addEntite(new Corde(this),4,i);
+        }
+
     }
 
     private void addEntite(Entite e, int x, int y) {
         grilleEntites[x][y] = e;
+        if (e instanceof EntiteStatique){
+            grilleOriginal[x][y]=e;
+        }
         map.put(e, new Point(x, y));
     }
     
@@ -103,7 +112,7 @@ public class Jeu {
         
         Point pCible = calculerPointCible(pCourant, d);
         
-        if (contenuDansGrille(pCible) && objetALaPosition(pCible) == null) { // a adapter (collisions murs, etc.)
+        if (contenuDansGrille(pCible) && (objetALaPosition(pCible) == null || objetALaPosition(pCible) instanceof Corde)) { // a adapter (collisions murs, etc.)
             // compter le déplacement : 1 deplacement horizontal et vertical max par pas de temps par entité
             switch (d) {
                 case bas, haut:
@@ -146,7 +155,7 @@ public class Jeu {
     }
     
     private void deplacerEntite(Point pCourant, Point pCible, Entite e) {
-        grilleEntites[pCourant.x][pCourant.y] = null;
+        grilleEntites[pCourant.x][pCourant.y] = grilleOriginal[pCourant.x][pCourant.y];
         grilleEntites[pCible.x][pCible.y] = e;
         map.put(e, pCible);
     }
