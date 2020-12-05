@@ -5,15 +5,13 @@
  */
 package modele.plateau;
 
-import modele.deplacements.Controle4Directions;
-import modele.deplacements.Direction;
-import modele.deplacements.Gravite;
-import modele.deplacements.Ordonnanceur;
+import modele.deplacements.*;
 
 import java.awt.Point;
 import java.util.HashMap;
 
-/** Actuellement, cette classe gère les postions
+/**
+ * Actuellement, cette classe gère les postions
  * (ajouter conditions de victoire, chargement du plateau, etc.)
  */
 public class Jeu {
@@ -26,8 +24,9 @@ public class Jeu {
     private HashMap<Entite, Integer> cmptDeplV = new HashMap<Entite, Integer>();
 
     private Heros hector;
+    private Enemy[] enemyArray;
 
-    private HashMap<Entite, Point> map = new  HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
+    private HashMap<Entite, Point> map = new HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
     private Entite[][] grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
 
@@ -45,15 +44,15 @@ public class Jeu {
     public void start(long _pause) {
         ordonnanceur.start(_pause);
     }
-    
+
     public Entite[][] getGrille() {
         return grilleEntites;
     }
-    
+
     public Heros getHector() {
         return hector;
     }
-    
+
     private void initialisationDesEntites() {
         hector = new Heros(this);
         addEntite(hector, 2, 1);
@@ -64,6 +63,16 @@ public class Jeu {
 
         Controle4Directions.getInstance().addEntiteDynamique(hector);
         ordonnanceur.add(Controle4Directions.getInstance());
+
+        IA iaManager = new IA();
+        ordonnanceur.add(iaManager);
+
+        enemyArray = new Enemy[1];
+        enemyArray[0] = new Enemy(this);
+        addEntite(enemyArray[0], 8, 6);
+        g.addEntiteDynamique(enemyArray[0]);
+        iaManager.addEntiteDynamique(enemyArray[0]);
+
 
         // murs extérieurs horizontaux
         for (int x = 0; x < 20; x++) {
@@ -80,38 +89,39 @@ public class Jeu {
         addEntite(new Sol(this), 2, 6);
         addEntite(new Sol(this), 3, 6);
 
-        for (int i = 6; i <9; i++) {
-            addEntite(new Corde(this),4,i);
+        for (int i = 1; i < 9; i++) {
+            addEntite(new Corde(this), 4, i);
         }
 
     }
 
     private void addEntite(Entite e, int x, int y) {
         grilleEntites[x][y] = e;
-        if (e instanceof EntiteStatique){
-            grilleOriginal[x][y]=e;
+        if (e instanceof EntiteStatique) {
+            grilleOriginal[x][y] = e;
         }
         map.put(e, new Point(x, y));
     }
-    
-    /** Permet par exemple a une entité  de percevoir sont environnement proche et de définir sa stratégie de déplacement
-     *
+
+    /**
+     * Permet par exemple a une entité  de percevoir sont environnement proche et de définir sa stratégie de déplacement
      */
     public Entite regarderDansLaDirection(Entite e, Direction d) {
         Point positionEntite = map.get(e);
         return objetALaPosition(calculerPointCible(positionEntite, d));
     }
-    
-    /** Si le déplacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
+
+    /**
+     * Si le déplacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
      * Sinon, rien n'est fait.
      */
     public boolean deplacerEntite(Entite e, Direction d) {
         boolean retour = false;
-        
+
         Point pCourant = map.get(e);
-        
+
         Point pCible = calculerPointCible(pCourant, d);
-        
+
         if (contenuDansGrille(pCible) && (objetALaPosition(pCible) == null || objetALaPosition(pCible) instanceof Corde)) { // a adapter (collisions murs, etc.)
             // compter le déplacement : 1 deplacement horizontal et vertical max par pas de temps par entité
             switch (d) {
@@ -131,48 +141,62 @@ public class Jeu {
                     break;
             }
         }
-
         if (retour) {
             deplacerEntite(pCourant, pCible, e);
         }
 
         return retour;
     }
-    
-    
+
+
     private Point calculerPointCible(Point pCourant, Direction d) {
         Point pCible = null;
-        
-        switch(d) {
-            case haut: pCible = new Point(pCourant.x, pCourant.y - 1); break;
-            case bas : pCible = new Point(pCourant.x, pCourant.y + 1); break;
-            case gauche : pCible = new Point(pCourant.x - 1, pCourant.y); break;
-            case droite : pCible = new Point(pCourant.x + 1, pCourant.y); break;     
-            
+
+        switch (d) {
+            case haut:
+                pCible = new Point(pCourant.x, pCourant.y - 1);
+                break;
+            case bas:
+                pCible = new Point(pCourant.x, pCourant.y + 1);
+                break;
+            case gauche:
+                pCible = new Point(pCourant.x - 1, pCourant.y);
+                break;
+            case droite:
+                pCible = new Point(pCourant.x + 1, pCourant.y);
+                break;
+            case basGauche:
+                pCible = new Point(pCourant.x - 1, pCourant.y + 1);
+                break;
+            case basDroite:
+                pCible = new Point(pCourant.x + 1, pCourant.y + 1);
+                break;
+
         }
-        
+
         return pCible;
     }
-    
+
     private void deplacerEntite(Point pCourant, Point pCible, Entite e) {
         grilleEntites[pCourant.x][pCourant.y] = grilleOriginal[pCourant.x][pCourant.y];
         grilleEntites[pCible.x][pCible.y] = e;
         map.put(e, pCible);
     }
-    
-    /** Indique si p est contenu dans la grille
+
+    /**
+     * Indique si p est contenu dans la grille
      */
     private boolean contenuDansGrille(Point p) {
         return p.x >= 0 && p.x < SIZE_X && p.y >= 0 && p.y < SIZE_Y;
     }
-    
+
     private Entite objetALaPosition(Point p) {
         Entite retour = null;
-        
+
         if (contenuDansGrille(p)) {
             retour = grilleEntites[p.x][p.y];
         }
-        
+
         return retour;
     }
 
