@@ -8,7 +8,7 @@ package modele.plateau;
 /**
  * Héros du jeu
  */
-public class Heros extends EntiteDynamique {
+public class Heros extends EntiteDynamique implements IKillable {
     public Heros(Jeu _jeu) {
         super(_jeu);
     }
@@ -16,4 +16,9 @@ public class Heros extends EntiteDynamique {
     public boolean peutEtreEcrase() { return true; }
     public boolean peutServirDeSupport() { return true; }
     public boolean peutPermettreDeMonterDescendre() { return false; };
+
+    @Override
+    public void kill() {
+        jeu.recommencer();
+    }
 }

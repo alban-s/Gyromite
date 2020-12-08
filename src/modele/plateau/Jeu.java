@@ -24,7 +24,6 @@ public class Jeu {
     private HashMap<Entite, Integer> cmptDeplV = new HashMap<Entite, Integer>();
 
     private Heros hector;
-    private Enemy[] enemyArray;
 
     private HashMap<Entite, Point> map = new HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -45,34 +44,144 @@ public class Jeu {
         ordonnanceur.start(_pause);
     }
 
-    public Entite[][] getGrille() {
-        return grilleEntites;
+    public void genererNiveauRandom() {
+        // murs extérieurs horizontaux
+        for (int x = 0; x < 20; x++) {
+            addEntite(new Sol(this), x, 0);
+            addEntite(new Sol(this), x, 9);
+        }
+
+        // murs extérieurs verticaux
+        for (int y = 1; y < 9; y++) {
+            addEntite(new Mur(this), 0, y);
+            addEntite(new Mur(this), 19, y);
+        }
+
+        // 3 étages : y = 9, 6 ,3;
+        // étage 2 :
+        double f1Ran = (Math.random() * 15) + 1;
+        for (int i = 0; i < f1Ran - 1; i++) {
+            addEntite(new Sol(this), i, 6);
+        }
+        double f1MiddleHole = (Math.random() * 0) + 3;
+        for (int i = (int) (f1Ran + f1MiddleHole); i < 20; i++) {
+            addEntite(new Sol(this), i, 6);
+        }
+
+
+        //étage 3
+        double f2Ran = (Math.random() * 8) + 1;
+        for (int i = 0; i < f2Ran - 1; i++) {
+            addEntite(new Sol(this), i, 3);
+        }
+        double f2MiddleHole1 = (Math.random() * 3) + 2;
+        double f2MiddleHole2 = (Math.random() * 6) + 2;
+        for (int i = (int) (f2Ran + f2MiddleHole1); i < 20 - f2MiddleHole2; i++) {
+            addEntite(new Sol(this), i, 3);
+        }
+
+        if (f2Ran > 3){
+            addEntite(new Tnt(this),1,2);
+        }
+        if ((int) (f2Ran + f2MiddleHole1 + f2MiddleHole2) <20 &&
+                (grilleOriginal[(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2)][3] instanceof Sol)){
+            addEntite(new Tnt(this),(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2),2);
+
+        }
+
+
+        if (grilleOriginal[(int)(f2Ran)][6] instanceof Sol){
+            for (int i = 0; i < 5; i++) {
+                addEntite(new Corde(this), (int)(f2Ran), 1+i);
+            }
+        }
+        else {
+            color sel;
+            if (Math.random() > 0.5){
+                sel = color.rouge;
+            }
+            else {
+                sel =color.bleu;
+            }
+            for (int i = 0; i < 3; i++) {
+                Colonne col = new Colonne(this,sel);
+                addEntite(col, (int)(f2Ran), 1+i);
+                ColonneManager.getInstance().addEntiteDynamique(col);
+            }
+        }
+
+        int minH=4;
+        if (!(grilleOriginal[(int)(f1Ran)][3] instanceof Sol)){
+            minH =1;
+        }
+        for (int i = 0; i < 5 + (4-minH); i++) {
+            addEntite(new Corde(this), (int)(f1Ran), minH+i);
+        }
+
+        if (!(grilleOriginal[(int)(f1Ran + f1MiddleHole)][3] instanceof Sol)){
+            minH =1;
+        }
+        for (int i = 0; i < 5 + (4-minH); i++) {
+            addEntite(new Corde(this), (int)((f1Ran + f1MiddleHole)), minH+i);
+        }
+
+
+        if (grilleOriginal[(int)(f2Ran+ f2MiddleHole1)][6] instanceof Sol){
+            for (int i = 0; i < 5; i++) {
+                addEntite(new Corde(this), (int)(f2Ran+ f2MiddleHole1), 1+i);
+            }
+        }
+        else {
+            color sel;
+            if (Math.random() > 0.5){
+                sel = color.rouge;
+            }
+            else {
+                sel =color.bleu;
+            }
+            for (int i = 0; i < 3; i++) {
+                Colonne col = new Colonne(this,sel);
+                addEntite(col, (int)(f2Ran+ f2MiddleHole1), 1+i);
+                ColonneManager.getInstance().addEntiteDynamique(col);
+            }
+        }
+
+
+
+        hector = new Heros(this);
+        addEntite(hector, 2, 2);
+
+        Gravite.getInstance().addEntiteDynamique(hector);
+        Controle4Directions.getInstance().addEntiteDynamique(hector);
+
+        addEntite(new Tnt(this),18,8);
+
+
+        double max = Math.random() * 3 + 1;
+        Enemy[] enemyArray = new Enemy[5];
+        for (int i = 0; i < 2; i++) {
+            enemyArray[i] = new Enemy(this);
+            addEntite(enemyArray[i], (int) (Math.random() * 16 + 2), ((int) (Math.random() * 2) * 3) + 4);
+            Gravite.getInstance().addEntiteDynamique(enemyArray[i]);
+            IA.getInstance().addEntiteDynamique(enemyArray[i]);
+        }
+
+
     }
 
-    public Heros getHector() {
-        return hector;
-    }
 
-    private void initialisationDesEntites() {
+    public void genererNiveau() {
         hector = new Heros(this);
         addEntite(hector, 2, 1);
 
-        Gravite g = new Gravite();
-        g.addEntiteDynamique(hector);
-        ordonnanceur.add(g);
-
+        Gravite.getInstance().addEntiteDynamique(hector);
         Controle4Directions.getInstance().addEntiteDynamique(hector);
-        ordonnanceur.add(Controle4Directions.getInstance());
 
-        IA iaManager = new IA();
-        ordonnanceur.add(iaManager);
-
-        enemyArray = new Enemy[1];
+        Enemy[] enemyArray = new Enemy[1];
         enemyArray[0] = new Enemy(this);
         addEntite(enemyArray[0], 8, 6);
-        g.addEntiteDynamique(enemyArray[0]);
-        iaManager.addEntiteDynamique(enemyArray[0]);
-
+        Gravite.getInstance().addEntiteDynamique(enemyArray[0]);
+        IA.getInstance().addEntiteDynamique(enemyArray[0]);
 
         // murs extérieurs horizontaux
         for (int x = 0; x < 20; x++) {
@@ -88,11 +197,65 @@ public class Jeu {
 
         addEntite(new Sol(this), 2, 6);
         addEntite(new Sol(this), 3, 6);
+        addEntite(new Sol(this), 2, 3);
+        addEntite(new Sol(this), 1, 3);
+
+        //Colonne col = new Colonne(this,color.rouge);
+        Colonne[] colT = new Colonne[3];
+        Colonne[] colTB = new Colonne[3];
+        for (int i = 0; i < 3; i++) {
+            colT[i] = new Colonne(this, color.rouge);
+            addEntite(colT[i], 1, 6 + i);
+            ColonneManager.getInstance().addEntiteDynamique(colT[i]);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            colTB[i] = new Colonne(this, color.bleu);
+            addEntite(colTB[i], 7, 6 + i);
+            ColonneManager.getInstance().addEntiteDynamique(colTB[i]);
+        }
+
+        //addEntite(col,1,7);
+        //addEntite(col,1,8);
+        //addEntite(new Colonne(this, color.rouge),1,6);
+        //addEntite(new Colonne(this, color.rouge),1,5);
+        //addEntite(new Colonne(this, color.rouge),1,4);
 
         for (int i = 1; i < 9; i++) {
             addEntite(new Corde(this), 4, i);
         }
+    }
 
+    public void recommencer() {
+        HashMap<Entite, Point> map = new HashMap<Entite, Point>();
+        grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
+        grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
+        //Ordonnanceur ordonnanceur = new Ordonnanceur(this);
+        ColonneManager.getInstance().lstEntitesDynamiques.clear();
+        Gravite.getInstance().lstEntitesDynamiques.clear();
+        Controle4Directions.getInstance().lstEntitesDynamiques.clear();
+        IA.getInstance().lstEntitesDynamiques.clear();
+        map.clear();
+        genererNiveauRandom();
+        //start(300);
+    }
+
+    public Entite[][] getGrille() {
+        return grilleEntites;
+    }
+
+    public Heros getHector() {
+        return hector;
+    }
+
+    private void initialisationDesEntites() {
+        ordonnanceur.add(Gravite.getInstance());
+        ordonnanceur.add(Controle4Directions.getInstance());
+        ordonnanceur.add(IA.getInstance());
+        //modele.deplacements.Colonne pipeManager = new modele.deplacements.Colonne();
+        ordonnanceur.add(ColonneManager.getInstance());
+
+        genererNiveauRandom();
     }
 
     private void addEntite(Entite e, int x, int y) {

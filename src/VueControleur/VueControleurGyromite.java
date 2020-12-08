@@ -13,8 +13,10 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import modele.deplacements.ColonneManager;
 import modele.deplacements.Controle4Directions;
 import modele.deplacements.Direction;
+import modele.deplacements.color;
 import modele.plateau.*;
 
 
@@ -33,8 +35,9 @@ public class VueControleurGyromite extends JFrame implements Observer {
     private ImageIcon icoVide;
     private ImageIcon icoMur;
     private ImageIcon icoSol;
-    private ImageIcon icoColonne;
-
+    private ImageIcon icoColonneRouge;
+    private ImageIcon icoColonneBleu;
+    private ImageIcon icoTNT;
     private ImageIcon icoRope;
 
 
@@ -60,6 +63,9 @@ public class VueControleurGyromite extends JFrame implements Observer {
                     case KeyEvent.VK_RIGHT : Controle4Directions.getInstance().setDirectionCourante(Direction.droite); break;
                     case KeyEvent.VK_DOWN : Controle4Directions.getInstance().setDirectionCourante(Direction.bas); break;
                     case KeyEvent.VK_UP : Controle4Directions.getInstance().setDirectionCourante(Direction.haut); break;
+                    case KeyEvent.VK_S : ColonneManager.getInstance().trigger(color.rouge); break;
+                    case KeyEvent.VK_D : ColonneManager.getInstance().trigger(color.bleu); break;
+
                 }
             }
         });
@@ -69,10 +75,12 @@ public class VueControleurGyromite extends JFrame implements Observer {
     private void chargerLesIcones() {
         icoHero = chargerIcone("Images/Pacman.png");
         icoVide = chargerIcone("Images/bg_64.png");
-        icoColonne = chargerIcone("Images/pipe-middle_64.png");
+        icoColonneRouge = chargerIcone("Images/pipe-middle_64.png");
+        icoColonneBleu = chargerIcone("Images/pipe_blue.png");
         icoMur = chargerIcone("Images/wall_64.png");
         icoSol = chargerIcone("Images/ground_64.png");
         icoRope = chargerIcone("Images/rope_64.png");
+        icoTNT =  chargerIcone("Images/bricksx64.png");
     }
 
     private ImageIcon chargerIcone(String urlIcone) {
@@ -124,9 +132,16 @@ public class VueControleurGyromite extends JFrame implements Observer {
                 } else if (jeu.getGrille()[x][y] instanceof Mur) {
                     tabJLabel[x][y+1].setIcon(icoMur);
                 } else if (jeu.getGrille()[x][y] instanceof Colonne) {
-                    tabJLabel[x][y+1].setIcon(icoColonne);
+                    if (((Colonne) jeu.getGrille()[x][y]).col == color.rouge){
+                        tabJLabel[x][y+1].setIcon(icoColonneRouge);
+                    }
+                    else {
+                        tabJLabel[x][y+1].setIcon(icoColonneBleu);
+                    }
                 } else if (jeu.getGrille()[x][y] instanceof Corde) {
                     tabJLabel[x][y+1].setIcon(icoRope);
+                } else if (jeu.getGrille()[x][y] instanceof Tnt) {
+                    tabJLabel[x][y+1].setIcon(icoTNT);
                 } else {
                     tabJLabel[x][y+1].setIcon(icoVide);
                 }

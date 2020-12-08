@@ -6,6 +6,14 @@ import java.util.Currency;
 import java.util.HashMap;
 
 public class IA extends RealisateurDeDeplacement {
+    private static IA self;
+    public static IA getInstance() {
+        if (self == null) {
+            self = new IA();
+        }
+        return self;
+    }
+
     enum EState {
         wandering,
         chasing,
@@ -28,10 +36,7 @@ public class IA extends RealisateurDeDeplacement {
     private HashMap<EntiteDynamique, Status> IAState = new HashMap<EntiteDynamique, Status>();
 
     private boolean randomEvenWithRegen(){
-        double decision = Math.random();
-        //System.out.print(decision);
-        //System.out.print('\n');
-        return decision>0.5;
+        return Math.random()>0.5;
     }
 
     protected boolean realiserDeplacement() {

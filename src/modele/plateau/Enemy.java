@@ -1,6 +1,6 @@
 package modele.plateau;
 
-public class Enemy extends EntiteDynamique{
+public class Enemy extends EntiteDynamique implements IKillable{
     public Enemy(Jeu _jeu) {
         super(_jeu);
     }
@@ -18,5 +18,10 @@ public class Enemy extends EntiteDynamique{
     @Override
     public boolean peutPermettreDeMonterDescendre() {
         return false;
+    }
+
+    @Override
+    public void kill() {
+
     }
 }
