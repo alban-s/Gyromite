@@ -1,5 +1,8 @@
 package modele.plateau;
 
+import modele.deplacements.Gravite;
+import modele.deplacements.IA;
+
 public class Enemy extends EntiteDynamique implements IKillable{
     public Enemy(Jeu _jeu) {
         super(_jeu);
@@ -22,6 +25,11 @@ public class Enemy extends EntiteDynamique implements IKillable{
 
     @Override
     public void kill() {
+        System.out.print("SMICK DIED" + '\n');
+        //jeu.recommencer();
+        IA.getInstance().lstEntitesDynamiques.remove(this);
+        Gravite.getInstance().lstEntitesDynamiques.remove(this);
+        jeu.removeEntite(this);
 
     }
 }

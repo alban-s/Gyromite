@@ -40,6 +40,16 @@ public class Jeu {
         cmptDeplV.clear();
     }
 
+    public void removeEntite(Entite e){
+        int x=map.get(e).x;
+        int y=map.get(e).y;
+        grilleEntites[x][y] = null;
+        if (e instanceof EntiteStatique) {
+            grilleOriginal[x][y] = null;
+        }
+        map.remove(e);
+    }
+
     public void start(long _pause) {
         ordonnanceur.start(_pause);
     }
@@ -125,6 +135,11 @@ public class Jeu {
             addEntite(new Corde(this), (int)((f1Ran + f1MiddleHole)), minH+i);
         }
 
+        if (f1Ran > 5 && f2Ran > 3) {
+            for (int i = 0; i < 5; i++) {
+                addEntite(new Corde(this), 3, 4+i);
+            }
+        }
 
         if (grilleOriginal[(int)(f2Ran+ f2MiddleHole1)][6] instanceof Sol){
             for (int i = 0; i < 5; i++) {
@@ -161,9 +176,42 @@ public class Jeu {
         Enemy[] enemyArray = new Enemy[5];
         for (int i = 0; i < 2; i++) {
             enemyArray[i] = new Enemy(this);
-            addEntite(enemyArray[i], (int) (Math.random() * 16 + 2), ((int) (Math.random() * 2) * 3) + 4);
+            addEntite(enemyArray[i], (int) (Math.random() * 16 + 2), 8);
             Gravite.getInstance().addEntiteDynamique(enemyArray[i]);
             IA.getInstance().addEntiteDynamique(enemyArray[i]);
+        }
+
+        color sel;
+        if (Math.random() > 0.5){
+            sel = color.rouge;
+        }
+        else {
+            sel =color.bleu;
+        }
+        int offset = (int) (Math.random()*2) +2;
+        grilleOriginal[(int)(f1Ran-offset)][6] = null;
+        if ((int)(f1Ran-offset) >2){
+            for (int i = 0; i < 3; i++) {
+                Colonne col = new Colonne(this,sel);
+                addEntite(col, (int)(f1Ran-offset), 6+i);
+                ColonneManager.getInstance().addEntiteDynamique(col);
+            }
+        }
+
+
+
+        if (Math.random() > 0.5){
+            sel = color.rouge;
+        }
+        else {
+            sel =color.bleu;
+        }
+        int offset2 = (int) (Math.random()*2) +2;
+        grilleOriginal[(int)(f1Ran-offset2)][3] = null;
+        for (int i = 0; i < 3; i++) {
+            Colonne col = new Colonne(this,sel);
+            addEntite(col, (int)(f2Ran+ f2MiddleHole1+ f2MiddleHole2+1), 3+i);
+            ColonneManager.getInstance().addEntiteDynamique(col);
         }
 
 
@@ -259,6 +307,8 @@ public class Jeu {
     }
 
     private void addEntite(Entite e, int x, int y) {
+        grilleEntites[x][y] = null;
+        grilleOriginal[x][y] = null;
         grilleEntites[x][y] = e;
         if (e instanceof EntiteStatique) {
             grilleOriginal[x][y] = e;
@@ -291,15 +341,13 @@ public class Jeu {
                 case bas, haut:
                     if (cmptDeplV.get(e) == null) {
                         cmptDeplV.put(e, 1);
-
                         retour = true;
                     }
                     break;
                 case gauche, droite:
-                    if (cmptDeplH.get(e) == null) {
+                    if (cmptDeplH.get(e) == null && cmptDeplV.get(e) == null) {
                         cmptDeplH.put(e, 1);
                         retour = true;
-
                     }
                     break;
             }
