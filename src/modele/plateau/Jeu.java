@@ -36,6 +36,10 @@ public class Jeu {
         initialisationDesEntites();
     }
 
+    public void victoire(){
+        System.out.print("gagné!!");
+        //recommencer();
+    }
     public void resetCmptDepl() {
         cmptDeplH.clear();
         cmptDeplV.clear();
@@ -51,6 +55,8 @@ public class Jeu {
         if(e instanceof Tnt)
             nbr_tnt=nbr_tnt - 1;
         map.remove(e);
+        if(nbr_tnt == 0)
+            victoire();
     }
 
     public void start(long _pause) {
@@ -283,6 +289,7 @@ public class Jeu {
             addEntite(new Corde(this), 4, i);
         }
     }
+
 
     public void recommencer() {
         HashMap<Entite, Point> map = new HashMap<Entite, Point>();
