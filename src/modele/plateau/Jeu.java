@@ -83,25 +83,22 @@ public class Jeu {
 
 
         //étage 3
-        double f2Ran = (Math.random() * 8) + 1;
+        double f2Ran = (Math.random() * 6) + 1;
         for (int i = 0; i < f2Ran - 1; i++) {
             addEntite(new Sol(this), i, 3);
         }
         double f2MiddleHole1 = (Math.random() * 3) + 2;
-        double f2MiddleHole2 = (Math.random() * 6) + 2;
+        double f2MiddleHole2 = (Math.random() * 5) + 2;
         for (int i = (int) (f2Ran + f2MiddleHole1); i < 20 - f2MiddleHole2; i++) {
             addEntite(new Sol(this), i, 3);
         }
 
         if (f2Ran > 3){
             addEntite(new Tnt(this),1,2);
-            nbr_tnt= nbr_tnt + 1;
-
         }
         if ((int) (f2Ran + f2MiddleHole1 + f2MiddleHole2) <20 &&
                 (grilleOriginal[(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2)][3] instanceof Sol)){
             addEntite(new Tnt(this),(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2),2);
-            nbr_tnt= nbr_tnt + 1;
         }
 
 
@@ -169,7 +166,14 @@ public class Jeu {
 
 
         hector = new Heros(this);
-        addEntite(hector, 2, 2);
+        if (Math.random() >0.5){
+            addEntite(hector, 2, 2);
+        }
+        else {
+            addEntite(hector, 18, 5);
+            addEntite(new Tnt(this),2,8);
+        }
+
 
         Gravite.getInstance().addEntiteDynamique(hector);
         Controle4Directions.getInstance().addEntiteDynamique(hector);
@@ -314,10 +318,15 @@ public class Jeu {
 
     private void addEntite(Entite e, int x, int y) {
         grilleEntites[x][y] = null;
-        grilleOriginal[x][y] = null;
+        if (!(grilleOriginal[x][y] instanceof Corde)){
+            grilleOriginal[x][y] = null;
+        }
         grilleEntites[x][y] = e;
         if (e instanceof EntiteStatique) {
             grilleOriginal[x][y] = e;
+        }
+        if (e instanceof Tnt) {
+            nbr_tnt= nbr_tnt + 1;
         }
         map.put(e, new Point(x, y));
     }

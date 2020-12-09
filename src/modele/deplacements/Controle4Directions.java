@@ -34,7 +34,7 @@ public class Controle4Directions extends RealisateurDeDeplacement {
                     case gauche, droite:
                         eTnt =e.regarderDansLaDirection(directionCourante);
                         if(eTnt instanceof Tnt)
-                            e.jeu.removeEntite(eTnt);
+                            ((Tnt) eTnt).kill();
                         if (e.avancerDirectionChoisie(directionCourante))
                             ret = true;
 
