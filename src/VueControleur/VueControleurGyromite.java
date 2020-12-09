@@ -32,6 +32,7 @@ public class VueControleurGyromite extends JFrame implements Observer {
 
     // icones affichées dans la grille
     private ImageIcon icoHero;
+    private ImageIcon icoSmick;
     private ImageIcon icoVide;
     private ImageIcon icoMur;
     private ImageIcon icoSol;
@@ -73,14 +74,15 @@ public class VueControleurGyromite extends JFrame implements Observer {
 
 
     private void chargerLesIcones() {
-        icoHero = chargerIcone("Images/Pacman.png");
+        icoHero = chargerIcone("Images/prof.png");
+        icoSmick = chargerIcone("Images/Smick.png");
         icoVide = chargerIcone("Images/bg_64.png");
         icoColonneRouge = chargerIcone("Images/pipe-middle_64.png");
         icoColonneBleu = chargerIcone("Images/pipe_blue.png");
         icoMur = chargerIcone("Images/wall_64.png");
         icoSol = chargerIcone("Images/ground_64.png");
         icoRope = chargerIcone("Images/rope_64.png");
-        icoTNT =  chargerIcone("Images/bricksx64.png");
+        icoTNT =  chargerIcone("Images/tnt.png");
     }
 
     private ImageIcon chargerIcone(String urlIcone) {
@@ -126,7 +128,7 @@ public class VueControleurGyromite extends JFrame implements Observer {
                 if (jeu.getGrille()[x][y] instanceof Heros) {
                     tabJLabel[x][y+1].setIcon(icoHero);
                 } else if (jeu.getGrille()[x][y] instanceof Enemy) {
-                    tabJLabel[x][y+1].setIcon(icoHero);
+                    tabJLabel[x][y+1].setIcon(icoSmick);
                 } else if (jeu.getGrille()[x][y] instanceof Sol) {
                     tabJLabel[x][y+1].setIcon(icoSol);
                 } else if (jeu.getGrille()[x][y] instanceof Mur) {
