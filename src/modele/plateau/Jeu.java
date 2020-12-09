@@ -48,6 +48,8 @@ public class Jeu {
         if (e instanceof EntiteStatique) {
             grilleOriginal[x][y] = null;
         }
+        if(e instanceof Tnt)
+            nbr_tnt=nbr_tnt - 1;
         map.remove(e);
     }
 
@@ -320,13 +322,6 @@ public class Jeu {
         map.put(e, new Point(x, y));
     }
 
-    private void suppEntite(Entite e){
-        map.remove(e);
-        if(e instanceof Tnt)
-            nbr_tnt=nbr_tnt - 1;
-
-
-    }
 
     /**
      * Permet par exemple a une entité  de percevoir sont environnement proche et de définir sa stratégie de déplacement
@@ -366,6 +361,9 @@ public class Jeu {
         }
         if (retour) {
             deplacerEntite(pCourant, pCible, e);
+            if(e instanceof Tnt)
+                removeEntite(e);
+
         }
 
         return retour;

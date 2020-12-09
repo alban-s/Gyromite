@@ -3,6 +3,7 @@ package modele.deplacements;
 import modele.plateau.Corde;
 import modele.plateau.Entite;
 import modele.plateau.EntiteDynamique;
+import modele.plateau.Tnt;
 
 /**
  * Controle4Directions permet d'appliquer une direction (connexion avec le clavier) à un ensemble d'entités dynamiques
@@ -28,10 +29,15 @@ public class Controle4Directions extends RealisateurDeDeplacement {
         for (EntiteDynamique e : lstEntitesDynamiques) {
             if (directionCourante != null) {
                 Entite eBas;
+                Entite eTnt;
                 switch (directionCourante) {
                     case gauche, droite:
+                        eTnt =e.regarderDansLaDirection(directionCourante);
+                        if(eTnt instanceof Tnt)
+                            e.jeu.removeEntite(eTnt);
                         if (e.avancerDirectionChoisie(directionCourante))
                             ret = true;
+
                         break;
 
                     case haut:
