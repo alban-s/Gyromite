@@ -24,6 +24,7 @@ public class Jeu {
     private HashMap<Entite, Integer> cmptDeplV = new HashMap<Entite, Integer>();
 
     private Heros hector;
+    int nbr_tnt=0;
 
     private HashMap<Entite, Point> map = new HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -82,11 +83,13 @@ public class Jeu {
 
         if (f2Ran > 3){
             addEntite(new Tnt(this),1,2);
+            nbr_tnt= nbr_tnt + 1;
+
         }
         if ((int) (f2Ran + f2MiddleHole1 + f2MiddleHole2) <20 &&
                 (grilleOriginal[(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2)][3] instanceof Sol)){
             addEntite(new Tnt(this),(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2),2);
-
+            nbr_tnt= nbr_tnt + 1;
         }
 
 
@@ -155,6 +158,7 @@ public class Jeu {
         Controle4Directions.getInstance().addEntiteDynamique(hector);
 
         addEntite(new Tnt(this),18,8);
+        nbr_tnt= nbr_tnt + 1;
 
 
         double max = Math.random() * 3 + 1;
@@ -266,6 +270,14 @@ public class Jeu {
         map.put(e, new Point(x, y));
     }
 
+    private void suppEntite(Entite e){
+        map.remove(e);
+        if(e instanceof Tnt)
+            nbr_tnt=nbr_tnt - 1;
+
+
+    }
+
     /**
      * Permet par exemple a une entité  de percevoir sont environnement proche et de définir sa stratégie de déplacement
      */
@@ -285,7 +297,7 @@ public class Jeu {
 
         Point pCible = calculerPointCible(pCourant, d);
 
-        if (contenuDansGrille(pCible) && (objetALaPosition(pCible) == null || objetALaPosition(pCible) instanceof Corde)) { // a adapter (collisions murs, etc.)
+        if (contenuDansGrille(pCible) && (objetALaPosition(pCible) == null || objetALaPosition(pCible) instanceof Corde || objetALaPosition(pCible) instanceof Tnt)) { // a adapter (collisions murs, etc.)
             // compter le déplacement : 1 deplacement horizontal et vertical max par pas de temps par entité
             switch (d) {
                 case bas, haut:
