@@ -7,7 +7,8 @@ package modele.plateau;
 
 import modele.deplacements.*;
 
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -24,7 +25,8 @@ public class Jeu {
     private HashMap<Entite, Integer> cmptDeplV = new HashMap<Entite, Integer>();
 
     private Heros hector;
-    int nbr_tnt=0;
+    public int nbr_tnt=0;
+    public int score=0;
 
     private HashMap<Entite, Point> map = new HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -36,9 +38,20 @@ public class Jeu {
         initialisationDesEntites();
     }
 
+    public JPanel buildContentPane(){
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+
+        JLabel label = new JLabel("Score : "+score);
+        panel.add(label);
+
+        return panel;
+    }
     public void victoire(){
         System.out.print("gagné!!");
-        //recommencer();
+        System.out.print("score : ");
+        System.out.print(score);
+
     }
     public void resetCmptDepl() {
         cmptDeplH.clear();
@@ -54,8 +67,14 @@ public class Jeu {
         }
         if(e instanceof Tnt)
             nbr_tnt=nbr_tnt - 1;
+            score= score + 100;
+
+        if(e instanceof Enemy)
+            score=score+250;
+
         map.remove(e);
         if(nbr_tnt == 0)
+            score = score + 500;
             victoire();
     }
 
@@ -64,6 +83,7 @@ public class Jeu {
     }
 
     public void genererNiveauRandom() {
+
         // murs extérieurs horizontaux
         for (int x = 0; x < 20; x++) {
             addEntite(new Sol(this), x, 0);
@@ -185,7 +205,7 @@ public class Jeu {
         Controle4Directions.getInstance().addEntiteDynamique(hector);
 
         addEntite(new Tnt(this),18,8);
-        nbr_tnt= nbr_tnt + 1;
+//        nbr_tnt= nbr_tnt + 1;
 
 
         double max = Math.random() * 3 + 1;
@@ -295,6 +315,7 @@ public class Jeu {
         HashMap<Entite, Point> map = new HashMap<Entite, Point>();
         grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
         grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
+        score=0;
         //Ordonnanceur ordonnanceur = new Ordonnanceur(this);
         ColonneManager.getInstance().lstEntitesDynamiques.clear();
         Gravite.getInstance().lstEntitesDynamiques.clear();

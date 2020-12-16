@@ -104,8 +104,9 @@ public class VueControleurGyromite extends JFrame implements Observer {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
         JComponent grilleJLabels = new JPanel(new GridLayout(sizeY+1, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
-
+        setContentPane(jeu.buildContentPane());
         tabJLabel = new JLabel[sizeX][sizeY+1];
+
 
         for (int y = 0; y < sizeY+1; y++) {
             for (int x = 0; x < sizeX; x++) {
@@ -114,7 +115,9 @@ public class VueControleurGyromite extends JFrame implements Observer {
                 grilleJLabels.add(jlab);
             }
         }
+
         add(grilleJLabels);
+
     }
 
     
