@@ -40,10 +40,15 @@ public class Jeu {
 
     public JPanel buildContentPane(){
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-
+        //panel.setLayout(new OverlayLayout(panel));
+//        JLayeredPane lpanel = new JLayeredPane();
+//        lpanel.setBackground(Color.black);
         JLabel label = new JLabel("Score : "+score);
+//        lpanel.add(label);
         panel.add(label);
+        panel.setAlignmentX(1);
+        panel.setAlignmentY(0);
+        panel.setSize(1,1);
 
         return panel;
     }
