@@ -113,13 +113,13 @@ public class Jeu {
         int cHigh =Integer.parseInt(highscore);
         if (toSave > cHigh ){
             assert bufferedWriter != null;
-            System.out.print("zrzgezbezebzbz");
+            System.out.print("");
             bufferedWriter.write(String.valueOf(toSave));
         }
         else if (highscore.equals("0")){
             bufferedWriter.write("0");
         }
-        System.out.print("Saved :" + toSave);
+        System.out.print(" Saved : " + toSave);
         bufferedWriter.close();
 
     }
@@ -290,7 +290,7 @@ public class Jeu {
             sel =color.bleu;
         }
         int offset2 = (int) (Math.random()*2) +2;
-        grilleOriginal[(int)(f1Ran-offset2)][3] = null;
+        grilleOriginal[Math.max((int) (f1Ran - offset2), 0)][3] = null;
         for (int i = 0; i < 3; i++) {
             Colonne col = new Colonne(this,sel);
             addEntite(col, (int)(f2Ran+ f2MiddleHole1+ f2MiddleHole2+1), 3+i);
