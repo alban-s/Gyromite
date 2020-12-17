@@ -375,6 +375,7 @@ public class Jeu {
         grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
         score=0;
         vie=3;
+        nbr_tnt=0;
         //Ordonnanceur ordonnanceur = new Ordonnanceur(this);
         ColonneManager.getInstance().lstEntitesDynamiques.clear();
         Gravite.getInstance().lstEntitesDynamiques.clear();

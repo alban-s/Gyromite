@@ -131,11 +131,11 @@ public class VueControleurGyromite extends JFrame implements Observer {
         tabJLabel[0][0].setText(" Score :");
         tabJLabel[1][0].setText(String.valueOf(jeu.score));
 
-        tabJLabel[5][0].setText("Vie :");
-        tabJLabel[6][0].setText(String.valueOf(jeu.vie));
-
         tabJLabel[3][0].setText("Bombes");
         tabJLabel[4][0].setText(": " + jeu.nbr_tnt);
+
+        tabJLabel[6][0].setText("Vie :");
+        tabJLabel[7][0].setText(String.valueOf(jeu.vie));
 
         tabJLabel[17][0].setText("High");
         tabJLabel[18][0].setText("Score : ");

@@ -17,7 +17,7 @@ public class Colonne extends EntiteDynamique {
     public Colonne(Jeu _jeu, color _col) {
         super(_jeu);
         col=_col;
-        System.out.print(col);
+        //System.out.print(col);
     }
 
     @Override
