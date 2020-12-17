@@ -35,8 +35,12 @@ public class Controle4Directions extends RealisateurDeDeplacement {
                     case gauche, droite:
                         eTnt =e.regarderDansLaDirection(directionCourante);
                         if(eTnt instanceof Tnt){
+                            if(!(e.jeu.nbr_tnt > 1)){
+                                active = false;
+                            }
                             ((Tnt) eTnt).kill();
-                            active = false;
+
+
                         }
                         if (active){
                             if (e.avancerDirectionChoisie(directionCourante))
