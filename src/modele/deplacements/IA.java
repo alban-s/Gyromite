@@ -48,6 +48,23 @@ public class IA extends RealisateurDeDeplacement {
             Entite eHaut = e.regarderDansLaDirection(Direction.haut);
             Entite eBasG = e.regarderDansLaDirection(Direction.basGauche);
             Entite eBasD = e.regarderDansLaDirection(Direction.basDroite);
+            if (eBas instanceof Heros){
+                ((Heros) eBas).kill();
+                break;
+            }
+            else if (eHaut instanceof Heros){
+                ((Heros) eHaut).kill();
+                break;
+            }
+            else if (eGauche instanceof Heros){
+                ((Heros) eGauche).kill();
+                break;
+            }
+            else if (eDroite instanceof Heros){
+                ((Heros) eDroite).kill();
+                break;
+            }
+
 
             if (currentAIState.currentDir == Direction.haut && (eHaut instanceof Corde)){
                 if (randomEvenWithRegen()) {
@@ -114,8 +131,6 @@ public class IA extends RealisateurDeDeplacement {
                     currentAIState.currentDir=Direction.droite;
                 }
             }
-
-
 
             //System.out.print("IA MOVEMENT on " + e + '\n');
         }
