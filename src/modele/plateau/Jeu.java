@@ -120,13 +120,17 @@ public class Jeu {
         int cHigh =Integer.parseInt(highscore);
         if (toSave > cHigh ){
             assert bufferedWriter != null;
-            System.out.print("");
-            bufferedWriter.write(String.valueOf(toSave));
+            bufferedWriter.write(""+toSave);
+            System.out.print(" Saved : " + toSave);
         }
         else if (highscore.equals("0")){
             bufferedWriter.write("0");
         }
-        System.out.print(" Saved : " + toSave);
+        else {
+            System.out.print("salutttatze");
+            bufferedWriter.write(""+cHigh);
+        }
+
         bufferedWriter.close();
 
     }
