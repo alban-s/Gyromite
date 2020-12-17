@@ -19,6 +19,6 @@ public class Heros extends EntiteDynamique implements IKillable {
 
     @Override
     public void kill() {
-        jeu.recommencer();
+        jeu.recommencer(false);
     }
 }

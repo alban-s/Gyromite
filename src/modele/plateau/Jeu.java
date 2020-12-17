@@ -26,12 +26,12 @@ public class Jeu {
     private HashMap<Entite, Integer> cmptDeplV = new HashMap<Entite, Integer>();
 
     private Heros hector;
-    public int nbr_tnt=0;
-    public int score=0;
-    public int vie=3;
+    public int nbr_tnt = 0;
+    public int score = 0;
+    public int vie = 3;
 
 
-    public String highscore="0";
+    public String highscore = "0";
 
 
     private HashMap<Entite, Point> map = new HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
@@ -44,91 +44,88 @@ public class Jeu {
         initialisationDesEntites();
     }
 
-    public JPanel buildContentPane(){
+    public JPanel buildContentPane() {
         JPanel panel = new JPanel();
         //panel.setLayout(new OverlayLayout(panel));
 //        JLayeredPane lpanel = new JLayeredPane();
 //        lpanel.setBackground(Color.black);
-        JLabel label = new JLabel("Score : "+score);
+        JLabel label = new JLabel("Score : " + score);
 //        lpanel.add(label);
         panel.add(label);
         panel.setAlignmentX(1);
         panel.setAlignmentY(0);
-        panel.setSize(1,1);
+        panel.setSize(1, 1);
 
         return panel;
     }
-    public void victoire(){
+
+    public void victoire() {
+        addScore(500);
         System.out.print("gagné!!\n");
         System.out.print("score : ");
         System.out.print(score);
 
-        recommencer();
-
+        recommencer(true);
     }
+
     public void resetCmptDepl() {
         cmptDeplH.clear();
         cmptDeplV.clear();
     }
 
-    public void removeEntite(Entite e){
-        int x=map.get(e).x;
-        int y=map.get(e).y;
+    public void addScore(int sc){
+        score += sc;
+    }
+
+    public void removeEntite(Entite e) {
+        int x = map.get(e).x;
+        int y = map.get(e).y;
         grilleEntites[x][y] = null;
         if (e instanceof EntiteStatique) {
             grilleOriginal[x][y] = null;
         }
-        if(e instanceof Tnt)
-            nbr_tnt=nbr_tnt - 1;
-            score= score + 100;
-
-        if(e instanceof Enemy)
-            score=score+250;
+        if (e instanceof Tnt){
+            nbr_tnt = nbr_tnt - 1;
+        }
 
         map.remove(e);
-        if(nbr_tnt == 0){
-            score = score + 500;
+        if (nbr_tnt == 0) {
             victoire();
         }
     }
 
     private void loadData() throws IOException {
-        BufferedReader bufferedReader= null;
-        try{
+        BufferedReader bufferedReader = null;
+        try {
             bufferedReader = new BufferedReader(new FileReader("data/score.txt"));
 
-        }
-        catch (FileNotFoundException exception){
+        } catch (FileNotFoundException exception) {
             System.out.print("HighScore File not Found, creating new one");
-            highscore="0";
+            highscore = "0";
             SaveToFile(0);
             bufferedReader = new BufferedReader(new FileReader("data/score.txt"));
         }
-        highscore =  bufferedReader.readLine();
+        highscore = bufferedReader.readLine();
         bufferedReader.close();
 
     }
 
-    private void SaveToFile(int toSave) throws IOException{
+    private void SaveToFile(int toSave) throws IOException {
         BufferedWriter bufferedWriter = null;
-        try{
+        try {
             bufferedWriter = new BufferedWriter(new FileWriter("data/score.txt"));
-        }
-        catch (FileNotFoundException exception){
+        } catch (FileNotFoundException exception) {
             System.out.print("write not found");
         }
-        int cHigh =Integer.parseInt(highscore);
-        if (toSave > cHigh ){
+        int cHigh = Integer.parseInt(highscore);
+        if (toSave > cHigh) {
             assert bufferedWriter != null;
-            bufferedWriter.write(""+toSave);
+            bufferedWriter.write("" + toSave);
             System.out.print(" Saved : " + toSave);
-        }
-        else if (highscore.equals("0")){
+        } else if (highscore.equals("0")) {
             bufferedWriter.write("0");
-        }
-        else {
-            System.out.print("salutttatze");
-            bufferedWriter.write(""+cHigh);
+        } else {
+            bufferedWriter.write("" + cHigh);
         }
 
         bufferedWriter.close();
@@ -177,98 +174,92 @@ public class Jeu {
             addEntite(new Sol(this), i, 3);
         }
 
-        if (f2Ran > 3){
-            addEntite(new Tnt(this),1,2);
+        if (f2Ran > 3) {
+            addEntite(new Tnt(this), 1, 2);
         }
-        if ((int) (f2Ran + f2MiddleHole1 + f2MiddleHole2) <20 &&
-                (grilleOriginal[(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2)][3] instanceof Sol)){
-            addEntite(new Tnt(this),(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2),2);
+        if ((int) (f2Ran + f2MiddleHole1 + f2MiddleHole2) < 20 &&
+                (grilleOriginal[(int) (f2Ran + f2MiddleHole1 + f2MiddleHole2)][3] instanceof Sol)) {
+            addEntite(new Tnt(this), (int) (f2Ran + f2MiddleHole1 + f2MiddleHole2), 2);
         }
 
 
-        if (grilleOriginal[(int)(f2Ran)][6] instanceof Sol){
+        if (grilleOriginal[(int) (f2Ran)][6] instanceof Sol) {
             for (int i = 0; i < 5; i++) {
-                addEntite(new Corde(this), (int)(f2Ran), 1+i);
+                addEntite(new Corde(this), (int) (f2Ran), 1 + i);
             }
-        }
-        else {
+        } else {
             color sel;
-            if (Math.random() > 0.5){
+            if (Math.random() > 0.5) {
                 sel = color.rouge;
-            }
-            else {
-                sel =color.bleu;
+            } else {
+                sel = color.bleu;
             }
             for (int i = 0; i < 3; i++) {
-                Colonne col = new Colonne(this,sel);
-                addEntite(col, (int)(f2Ran), 1+i);
+                Colonne col = new Colonne(this, sel);
+                addEntite(col, (int) (f2Ran), 1 + i);
                 ColonneManager.getInstance().addEntiteDynamique(col);
             }
         }
 
-        int minH=4;
-        if (!(grilleOriginal[(int)(f1Ran)][3] instanceof Sol)){
-            minH =1;
+        int minH = 4;
+        if (!(grilleOriginal[(int) (f1Ran)][3] instanceof Sol)) {
+            minH = 1;
         }
-        for (int i = 0; i < 5 + (4-minH); i++) {
-            addEntite(new Corde(this), (int)(f1Ran), minH+i);
+        for (int i = 0; i < 5 + (4 - minH); i++) {
+            addEntite(new Corde(this), (int) (f1Ran), minH + i);
         }
 
-        if (!(grilleOriginal[(int)(f1Ran + f1MiddleHole)][3] instanceof Sol)){
-            minH =1;
+        if (!(grilleOriginal[(int) (f1Ran + f1MiddleHole)][3] instanceof Sol)) {
+            minH = 1;
         }
-        for (int i = 0; i < 5 + (4-minH); i++) {
-            addEntite(new Corde(this), (int)((f1Ran + f1MiddleHole)), minH+i);
+        for (int i = 0; i < 5 + (4 - minH); i++) {
+            addEntite(new Corde(this), (int) ((f1Ran + f1MiddleHole)), minH + i);
         }
 
         if (f1Ran > 5 && f2Ran > 3) {
             for (int i = 0; i < 5; i++) {
-                addEntite(new Corde(this), 3, 4+i);
+                addEntite(new Corde(this), 3, 4 + i);
             }
         }
 
-        if (grilleOriginal[(int)(f2Ran+ f2MiddleHole1)][6] instanceof Sol){
+        if (grilleOriginal[(int) (f2Ran + f2MiddleHole1)][6] instanceof Sol) {
             for (int i = 0; i < 5; i++) {
-                addEntite(new Corde(this), (int)(f2Ran+ f2MiddleHole1), 1+i);
+                addEntite(new Corde(this), (int) (f2Ran + f2MiddleHole1), 1 + i);
             }
-        }
-        else {
+        } else {
             color sel;
-            if (Math.random() > 0.5){
+            if (Math.random() > 0.5) {
                 sel = color.rouge;
-            }
-            else {
-                sel =color.bleu;
+            } else {
+                sel = color.bleu;
             }
             for (int i = 0; i < 3; i++) {
-                Colonne col = new Colonne(this,sel);
-                addEntite(col, (int)(f2Ran+ f2MiddleHole1), 1+i);
+                Colonne col = new Colonne(this, sel);
+                addEntite(col, (int) (f2Ran + f2MiddleHole1), 1 + i);
                 ColonneManager.getInstance().addEntiteDynamique(col);
             }
         }
 
 
-
         hector = new Heros(this);
-        if (Math.random() >0.5){
+        if (Math.random() > 0.5) {
             addEntite(hector, 2, 2);
-        }
-        else {
+        } else {
             addEntite(hector, 18, 5);
-            addEntite(new Tnt(this),2,8);
+            addEntite(new Tnt(this), 2, 8);
         }
 
 
         Gravite.getInstance().addEntiteDynamique(hector);
         Controle4Directions.getInstance().addEntiteDynamique(hector);
 
-        addEntite(new Tnt(this),18,8);
+        addEntite(new Tnt(this), 18, 8);
 //        nbr_tnt= nbr_tnt + 1;
 
 
-        double max = Math.random() * 3 + 1;
+        //double max = Math.random() * 3 + 1;
         Enemy[] enemyArray = new Enemy[5];
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 0; i++) {
             enemyArray[i] = new Enemy(this);
             addEntite(enemyArray[i], (int) (Math.random() * 16 + 2), 8);
             Gravite.getInstance().addEntiteDynamique(enemyArray[i]);
@@ -276,35 +267,32 @@ public class Jeu {
         }
 
         color sel;
-        if (Math.random() > 0.5){
+        if (Math.random() > 0.5) {
             sel = color.rouge;
+        } else {
+            sel = color.bleu;
         }
-        else {
-            sel =color.bleu;
-        }
-        int offset = (int) (Math.random()*2) +2;
-        grilleOriginal[(int)(f1Ran-offset)][6] = null;
-        if ((int)(f1Ran-offset) >2){
+        int offset = (int) (Math.random() * 2) + 2;
+        grilleOriginal[Math.max((int) (f1Ran - offset),0)][6] = null;
+        if ((int) (f1Ran - offset) > 2) {
             for (int i = 0; i < 3; i++) {
-                Colonne col = new Colonne(this,sel);
-                addEntite(col, (int)(f1Ran-offset), 6+i);
+                Colonne col = new Colonne(this, sel);
+                addEntite(col, (int) (f1Ran - offset), 6 + i);
                 ColonneManager.getInstance().addEntiteDynamique(col);
             }
         }
 
 
-
-        if (Math.random() > 0.5){
+        if (Math.random() > 0.5) {
             sel = color.rouge;
+        } else {
+            sel = color.bleu;
         }
-        else {
-            sel =color.bleu;
-        }
-        int offset2 = (int) (Math.random()*2) +2;
+        int offset2 = (int) (Math.random() * 2) + 2;
         grilleOriginal[Math.max((int) (f1Ran - offset2), 0)][3] = null;
         for (int i = 0; i < 3; i++) {
-            Colonne col = new Colonne(this,sel);
-            addEntite(col, (int)(f2Ran+ f2MiddleHole1+ f2MiddleHole2+1), 3+i);
+            Colonne col = new Colonne(this, sel);
+            addEntite(col, (int) (f2Ran + f2MiddleHole1 + f2MiddleHole2 + 1), 3 + i);
             ColonneManager.getInstance().addEntiteDynamique(col);
         }
     }
@@ -367,25 +355,27 @@ public class Jeu {
     }
 
 
-    public void recommencer() {
+    public void recommencer(boolean keepScore) {
         try {
             SaveToFile(score);
             loadData();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        map.clear();
         HashMap<Entite, Point> map = new HashMap<Entite, Point>();
         grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
         grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
-        score=0;
-        vie=3;
-        nbr_tnt=0;
+        if (!keepScore){
+            score = 0;
+        }
+        vie = 3;
+        nbr_tnt = 0;
         //Ordonnanceur ordonnanceur = new Ordonnanceur(this);
         ColonneManager.getInstance().lstEntitesDynamiques.clear();
         Gravite.getInstance().lstEntitesDynamiques.clear();
         Controle4Directions.getInstance().lstEntitesDynamiques.clear();
         IA.getInstance().lstEntitesDynamiques.clear();
-        map.clear();
         genererNiveauRandom();
         //start(300);
     }
@@ -410,7 +400,7 @@ public class Jeu {
 
     private void addEntite(Entite e, int x, int y) {
         grilleEntites[x][y] = null;
-        if (!(grilleOriginal[x][y] instanceof Corde)){
+        if (!(grilleOriginal[x][y] instanceof Corde)) {
             grilleOriginal[x][y] = null;
         }
         grilleEntites[x][y] = e;
@@ -418,7 +408,7 @@ public class Jeu {
             grilleOriginal[x][y] = e;
         }
         if (e instanceof Tnt) {
-            nbr_tnt= nbr_tnt + 1;
+            nbr_tnt = nbr_tnt + 1;
         }
         map.put(e, new Point(x, y));
     }
@@ -462,7 +452,7 @@ public class Jeu {
         }
         if (retour) {
             deplacerEntite(pCourant, pCible, e);
-            if(e instanceof Tnt)
+            if (e instanceof Tnt)
                 removeEntite(e);
 
         }

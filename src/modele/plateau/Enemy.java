@@ -26,7 +26,7 @@ public class Enemy extends EntiteDynamique implements IKillable{
     @Override
     public void kill() {
         System.out.print("SMICK DIED" + '\n');
-        //jeu.recommencer();
+        jeu.addScore(250);
         IA.getInstance().lstEntitesDynamiques.remove(this);
         Gravite.getInstance().lstEntitesDynamiques.remove(this);
         jeu.removeEntite(this);

@@ -66,6 +66,7 @@ public class VueControleurGyromite extends JFrame implements Observer {
                     case KeyEvent.VK_UP : Controle4Directions.getInstance().setDirectionCourante(Direction.haut); break;
                     case KeyEvent.VK_S : ColonneManager.getInstance().trigger(color.rouge); break;
                     case KeyEvent.VK_D : ColonneManager.getInstance().trigger(color.bleu); break;
+                    case KeyEvent.VK_R : jeu.recommencer(false); break;
 
                 }
             }

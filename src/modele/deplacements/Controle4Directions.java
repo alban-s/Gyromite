@@ -30,16 +30,19 @@ public class Controle4Directions extends RealisateurDeDeplacement {
             if (directionCourante != null) {
                 Entite eBas;
                 Entite eTnt;
+                boolean active = true;
                 switch (directionCourante) {
                     case gauche, droite:
                         eTnt =e.regarderDansLaDirection(directionCourante);
-                        if(eTnt instanceof Tnt)
+                        if(eTnt instanceof Tnt){
                             ((Tnt) eTnt).kill();
-                        if (e.avancerDirectionChoisie(directionCourante))
-                            ret = true;
-
+                            active = false;
+                        }
+                        if (active){
+                            if (e.avancerDirectionChoisie(directionCourante))
+                                ret = true;
+                        }
                         break;
-
                     case haut:
                         // on ne peut pas sauter sans prendre appui
                         // (attention, test d'appui réalisé à partir de la position courante, si la gravité à été appliquée, il ne s'agit pas de la position affichée, amélioration possible)

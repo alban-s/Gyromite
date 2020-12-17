@@ -5,6 +5,7 @@ public class Tnt extends EntiteStatique implements IKillable {
 
     @Override
     public void kill() {
+        jeu.addScore(100);
         jeu.removeEntite(this);
         //TODO Score
     }
