@@ -49,19 +49,27 @@ public class IA extends RealisateurDeDeplacement {
             Entite eBasG = e.regarderDansLaDirection(Direction.basGauche);
             Entite eBasD = e.regarderDansLaDirection(Direction.basDroite);
             if (eBas instanceof Heros){
-                ((Heros) eBas).kill();
+                eBas.jeu.vie = eBas.jeu.vie - 1;
+                if(eBas.jeu.vie==0){
+                    ((Heros) eBas).kill();}
                 break;
             }
             else if (eHaut instanceof Heros){
-                ((Heros) eHaut).kill();
+                eHaut.jeu.vie = eHaut.jeu.vie - 1;
+                if(eBas.jeu.vie==0){
+                    ((Heros) eHaut).kill();}
                 break;
             }
             else if (eGauche instanceof Heros){
-                ((Heros) eGauche).kill();
+                eGauche.jeu.vie = eGauche.jeu.vie - 1;
+                if(eBas.jeu.vie==0){
+                    ((Heros) eGauche).kill();}
                 break;
             }
             else if (eDroite instanceof Heros){
-                ((Heros) eDroite).kill();
+                eDroite.jeu.vie = eDroite.jeu.vie - 1;
+                if(eBas.jeu.vie==0){
+                    ((Heros) eDroite).kill();}
                 break;
             }
 

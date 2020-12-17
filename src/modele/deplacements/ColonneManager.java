@@ -42,9 +42,16 @@ public class ColonneManager extends RealisateurDeDeplacement {
                     if (enHaut instanceof IKillable) {
                         ((EntiteDynamique) enHaut).avancerDirectionChoisie(Direction.haut);
                         if (((EntiteDynamique) enHaut).regarderDansLaDirection(Direction.haut) instanceof Sol) {
-                            ((IKillable) enHaut).kill();
-                            running = false;
-                            // TODO la mort de l'Entite dyn
+                            if(enHaut instanceof Heros) {
+                                enHaut.jeu.vie = enHaut.jeu.vie - 1;
+                                if(enHaut.jeu.vie==0){
+                                    ((IKillable) enHaut).kill();
+                                    running = false;}
+                            }else {((IKillable) enHaut).kill();
+                                running = false;}
+
+
+
                         }
                     }
                     if (running)
@@ -67,9 +74,14 @@ public class ColonneManager extends RealisateurDeDeplacement {
                     if (enBas instanceof IKillable) {
                         ((EntiteDynamique) enBas).avancerDirectionChoisie(Direction.bas);
                         if (((EntiteDynamique) enBas).regarderDansLaDirection(Direction.bas) instanceof Sol) {
-                            ((IKillable) enBas).kill();
-                            running = false;
-                            // TODO la mort de l'Entite dyn
+                            if(enBas instanceof Heros) {
+                                enBas.jeu.vie = enBas.jeu.vie - 1;
+                                if(enBas.jeu.vie==0){
+                                    ((IKillable) enBas).kill();
+                                    running = false;}
+                            }else {((IKillable) enBas).kill();
+                                running = false;}
+
                         }
                     }
                     if (running) {
@@ -93,9 +105,13 @@ public class ColonneManager extends RealisateurDeDeplacement {
                     if (enHaut instanceof IKillable) {
                         ((EntiteDynamique) enHaut).avancerDirectionChoisie(Direction.haut);
                         if (((EntiteDynamique) enHaut).regarderDansLaDirection(Direction.haut) instanceof Sol) {
-                            ((IKillable) enHaut).kill();
-                            running = false;
-                            // TODO la mort de l'Entite dyn
+                            if(enHaut instanceof Heros) {
+                                enHaut.jeu.vie = enHaut.jeu.vie - 1;
+                                if(enHaut.jeu.vie==0){
+                                    ((IKillable) enHaut).kill();
+                                    running = false;}
+                            }else {((IKillable) enHaut).kill();
+                                running = false;}
                         }
                     }
                     if (running)
@@ -116,9 +132,13 @@ public class ColonneManager extends RealisateurDeDeplacement {
                     if (enBas instanceof IKillable) {
                         ((EntiteDynamique) enBas).avancerDirectionChoisie(Direction.bas);
                         if (((EntiteDynamique) enBas).regarderDansLaDirection(Direction.bas) instanceof Sol) {
-                            ((IKillable) enBas).kill();
-                            running = false;
-                            // TODO la mort de l'Entite dyn
+                            if(enBas instanceof Heros) {
+                                enBas.jeu.vie = enBas.jeu.vie - 1;
+                                if(enBas.jeu.vie==0){
+                                    ((IKillable) enBas).kill();
+                                    running = false;}
+                            }else {((IKillable) enBas).kill();
+                                running = false;}
                         }
                     }
                     if (running)
