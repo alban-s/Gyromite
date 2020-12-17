@@ -9,6 +9,7 @@ import modele.deplacements.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.HashMap;
 
 /**
@@ -28,6 +29,10 @@ public class Jeu {
     public int nbr_tnt=0;
     public int score=0;
     public int vie=3;
+
+
+    public String highscore="0";
+
 
     private HashMap<Entite, Point> map = new HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -87,7 +92,47 @@ public class Jeu {
         }
     }
 
-    public void start(long _pause) {
+    private void loadData() throws IOException {
+        BufferedReader bufferedReader= null;
+        try{
+            bufferedReader = new BufferedReader(new FileReader("data/score.txt"));
+
+        }
+        catch (FileNotFoundException exception){
+            System.out.print("HighScore File not Found, creating new one");
+            highscore="0";
+            SaveToFile(0);
+            bufferedReader = new BufferedReader(new FileReader("data/score.txt"));
+        }
+        highscore =  bufferedReader.readLine();
+        bufferedReader.close();
+
+    }
+
+    private void SaveToFile(int toSave) throws IOException{
+        BufferedWriter bufferedWriter = null;
+        try{
+            bufferedWriter = new BufferedWriter(new FileWriter("data/score.txt"));
+        }
+        catch (FileNotFoundException exception){
+            System.out.print("write not found");
+        }
+        int cHigh =Integer.parseInt(highscore);
+        if (toSave > cHigh ){
+            assert bufferedWriter != null;
+            System.out.print("zrzgezbezebzbz");
+            bufferedWriter.write(String.valueOf(toSave));
+        }
+        else if (highscore.equals("0")){
+            bufferedWriter.write("0");
+        }
+        System.out.print("Saved :" + toSave);
+        bufferedWriter.close();
+
+    }
+
+    public void start(long _pause) throws IOException {
+        loadData();
         ordonnanceur.start(_pause);
     }
 
@@ -258,8 +303,6 @@ public class Jeu {
             addEntite(col, (int)(f2Ran+ f2MiddleHole1+ f2MiddleHole2+1), 3+i);
             ColonneManager.getInstance().addEntiteDynamique(col);
         }
-
-
     }
 
 
@@ -321,6 +364,12 @@ public class Jeu {
 
 
     public void recommencer() {
+        try {
+            SaveToFile(score);
+            loadData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         HashMap<Entite, Point> map = new HashMap<Entite, Point>();
         grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
         grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées

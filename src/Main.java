@@ -2,6 +2,8 @@
 import VueControleur.VueControleurGyromite;
 import modele.plateau.Jeu;
 
+import java.io.IOException;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,7 +12,7 @@ import modele.plateau.Jeu;
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Jeu jeu = new Jeu();
         
         VueControleurGyromite vc = new VueControleurGyromite(jeu);
