@@ -106,8 +106,12 @@ public class VueControleurGyromite extends JFrame implements Observer {
         JComponent grilleJLabels = new JPanel(new GridLayout(sizeY+1, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
 
         tabJLabel = new JLabel[sizeX][sizeY+1];
-        setContentPane(jeu.buildContentPane());
+        //setContentPane(jeu.buildContentPane());
 
+        JLabel scoreTextLabel = new JLabel("Score :");
+        JLabel scoreAmountLabel = new JLabel("0");
+        tabJLabel[0][0] = scoreTextLabel;
+        tabJLabel[1][0] = scoreAmountLabel;
         for (int y = 0; y < sizeY+1; y++) {
             for (int x = 0; x < sizeX; x++) {
                 JLabel jlab = new JLabel();
@@ -124,7 +128,8 @@ public class VueControleurGyromite extends JFrame implements Observer {
      * Il y a une grille du côté du modèle ( jeu.getGrille() ) et une grille du côté de la vue (tabJLabel)
      */
     private void mettreAJourAffichage() {
-
+        tabJLabel[0][0].setText("Score :");
+        tabJLabel[1][0].setText(String.valueOf(jeu.score));
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 if (jeu.getGrille()[x][y] instanceof Heros) {

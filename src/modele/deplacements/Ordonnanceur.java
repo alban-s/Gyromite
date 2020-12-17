@@ -48,6 +48,5 @@ public class Ordonnanceur extends Observable implements Runnable {
                 e.printStackTrace();
             }
         }
-
     }
 }
