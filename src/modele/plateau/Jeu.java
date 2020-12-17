@@ -27,6 +27,7 @@ public class Jeu {
     private Heros hector;
     public int nbr_tnt=0;
     public int score=0;
+    public int vie=3;
 
     private HashMap<Entite, Point> map = new HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -53,9 +54,11 @@ public class Jeu {
         return panel;
     }
     public void victoire(){
-        System.out.print("gagné!!");
+        System.out.print("gagné!!\n");
         System.out.print("score : ");
         System.out.print(score);
+
+        recommencer();
 
     }
     public void resetCmptDepl() {
@@ -78,9 +81,10 @@ public class Jeu {
             score=score+250;
 
         map.remove(e);
-        if(nbr_tnt == 0)
+        if(nbr_tnt == 0){
             score = score + 500;
             victoire();
+        }
     }
 
     public void start(long _pause) {
@@ -321,6 +325,7 @@ public class Jeu {
         grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
         grilleOriginal = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
         score=0;
+        vie=3;
         //Ordonnanceur ordonnanceur = new Ordonnanceur(this);
         ColonneManager.getInstance().lstEntitesDynamiques.clear();
         Gravite.getInstance().lstEntitesDynamiques.clear();
